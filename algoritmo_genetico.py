@@ -14,12 +14,25 @@ class Individuo():
         self.nota_avaliacao = 0
         self.geracao = geracao
         self.cromossomo = []
+        self.espaco_usado = 0 
         
         for i in range(len(espacos)):
             if random() < 0.5:
                 self.cromossomo.append("0")
             else:
                 self.cromossomo.append("1")
+                
+    def avaliacao(self):
+        nota = 0
+        soma_espacos = 0
+        for i in range(len(self.cromossomo)):
+            if self.cromossomo[i] == '1':
+                nota += self.valores[i]
+                soma_espacos += self.espacos[i]
+        if soma_espacos > self.limite_espacos:
+            nota = 1
+        self.nota_avaliacao = nota
+        self.espaco_usado = soma_espacos
     
 if __name__ == '__main__':
     lista_produtos = []
@@ -37,9 +50,7 @@ if __name__ == '__main__':
     lista_produtos.append(Produto("Geladeira Consul", 0.870, 1199.89))
     lista_produtos.append(Produto("Notebook Lenovo", 0.498, 1999.90))
     lista_produtos.append(Produto("Notebook Asus", 0.527, 3999.00))
-    #for produto in lista_produtos:
-        #print(produto.nome)
-        
+       
     espacos = []
     valores = []
     nomes = []
@@ -59,6 +70,9 @@ if __name__ == '__main__':
         if individuo1.cromossomo[i] == '1':
             print("Nome: %s R$ %s " %(lista_produtos[i].nome, lista_produtos[i].valor))
     
+    individuo1.avaliacao()
+    print("Nota = %s" % individuo1.nota_avaliacao)
+    print("Espaço usado = %s" % individuo1.espaco_usado)
     
     
     
