@@ -6,8 +6,8 @@ class Produto():
         self.espaco = espaco
         self.valor = valor
         
-class Inidividuo():
-    def __init__(self, espacos, valores, limite_espacos, geracao):
+class Individuo():
+    def __init__(self, espacos, valores, limite_espacos, geracao = 0):
         self.espacos = espacos
         self.valores = valores
         self.limite_espacos = limite_espacos
@@ -37,5 +37,49 @@ if __name__ == '__main__':
     lista_produtos.append(Produto("Geladeira Consul", 0.870, 1199.89))
     lista_produtos.append(Produto("Notebook Lenovo", 0.498, 1999.90))
     lista_produtos.append(Produto("Notebook Asus", 0.527, 3999.00))
+    #for produto in lista_produtos:
+        #print(produto.nome)
+        
+    espacos = []
+    valores = []
+    nomes = []
     for produto in lista_produtos:
-        print(produto.nome)
+        espacos.append(produto.espaco)
+        valores.append(produto.valor)
+        nomes.append(produto.nome)
+    limite = 3
+    
+    individuo1 = Individuo(espacos, valores, limite)
+    print("Espaços = %s" % str(individuo1.espacos))
+    print("Valores = %s" % str(individuo1.valores))
+    print("Cromossomo = %s" % str(individuo1.cromossomo))
+    
+    print("\nComponentes da carga")
+    for i in range(len(lista_produtos)):
+        if individuo1.cromossomo[i] == '1':
+            print("Nome: %s R$ %s " %(lista_produtos[i].nome, lista_produtos[i].valor))
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
