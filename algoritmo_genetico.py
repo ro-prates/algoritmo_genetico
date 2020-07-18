@@ -1,9 +1,26 @@
+from random import random
+
 class Produto():
     def __init__(self, nome, espaco, valor):
         self.nome = nome
         self.espaco = espaco
         self.valor = valor
         
+class Inidividuo():
+    def __init__(self, espacos, valores, limite_espacos, geracao):
+        self.espacos = espacos
+        self.valores = valores
+        self.limite_espacos = limite_espacos
+        self.nota_avaliacao = 0
+        self.geracao = geracao
+        self.cromossomo = []
+        
+        for i in range(len(espacos)):
+            if random() < 0.5:
+                self.cromossomo.append("0")
+            else:
+                self.cromossomo.append("1")
+    
 if __name__ == '__main__':
     lista_produtos = []
     lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
