@@ -45,6 +45,17 @@ class Individuo():
         filhos[1].cromossomo = filho2
         return filhos
     
+    def mutacao(self, taxa_mutacao):
+        print("Antes %s" % self.cromossomo)
+        for i in range(len(self.cromossomo)):
+            if random() < taxa_mutacao:
+                if self.cromossomo[i] == '1':
+                    self.cromossomo[i] = '0'
+                else:
+                    self.cromossomo[i] = '1'
+        print("Depois %s " % self.cromossomo)                    
+        return self
+    
 if __name__ == '__main__':
     lista_produtos = []
     lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
@@ -65,6 +76,7 @@ if __name__ == '__main__':
     espacos = []
     valores = []
     nomes = []
+    
     for produto in lista_produtos:
         espacos.append(produto.espaco)
         valores.append(produto.valor)
@@ -95,7 +107,8 @@ if __name__ == '__main__':
     print("Espaço usado = %s" % individuo2.espaco_usado)
     
     individuo1.crossover(individuo2)
-    
+    individuo1.mutacao(0.05)
+    individuo2.mutacao(0.05)
     
     
     
