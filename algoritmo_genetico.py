@@ -1,4 +1,5 @@
 from random import random
+import matplotlib.pyplot as plt
 
 class Produto():
     def __init__(self, nome, espaco, valor):
@@ -62,6 +63,7 @@ class AlgoritmoGenetico():
         self.populacao = []
         self.geracao = 0
         self.melhor_solucao = 0
+        self.lista_solucoes = []
         
     def inicializa_popupalacao(self, espacos, valores, limite_espacos):
         for i in range(self.tamanho_populacao):
@@ -108,6 +110,9 @@ class AlgoritmoGenetico():
             individuo.avaliacao()
         
         self.ordena_populacao()
+        self.melhor_solucao = self.populacao[0]
+        self.lista_solucoes.append(self.melhor_solucao.nota_avaliacao)
+        
         self.visualiza_geracao()
         
         for geracao in range(numero_geracoes):
@@ -129,6 +134,7 @@ class AlgoritmoGenetico():
             self.ordena_populacao()
             self.visualiza_geracao()
             melhor = self.populacao[0]
+            self.lista_solucoes.append(melhor.nota_avaliacao)
             self.melhor_individuo(melhor)
             
         print("Melhor solução -> G: %s Valor: %s Espaço: %s Cromossomo: %s" %
@@ -166,7 +172,7 @@ if __name__ == '__main__':
     limite = 3
     tamanho_populacao = 20
     taxa_mutacao = 0.01
-    numero_geracoes = 10000
+    numero_geracoes = 100
     ag = AlgoritmoGenetico(tamanho_populacao)
     resultado = ag.resolver(taxa_mutacao, numero_geracoes, espacos, valores, limite)
     
@@ -174,9 +180,10 @@ if __name__ == '__main__':
         if resultado[i] == '1':
             print("Nome: %s R$ %s" %(lista_produtos[i].nome,
                                      lista_produtos[i].valor))
-    
-    
-    
+            
+    plt.plot(ag.lista_solucoes)
+    plt.title("Evolução das soluções")
+    plt.show()
     
     
     
