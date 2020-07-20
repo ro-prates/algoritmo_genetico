@@ -12,6 +12,9 @@ class Produto():
         self.espaco = espaco
         self.valor = valor
         
+espacos = []
+valores = []
+nomes = []
 lista_produtos = []
 
 lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
@@ -28,10 +31,6 @@ lista_produtos.append(Produto("Geladeira Brastemp", 0.635, 849.00))
 lista_produtos.append(Produto("Geladeira Consul", 0.870, 1199.89))
 lista_produtos.append(Produto("Notebook Lenovo", 0.498, 1999.90))
 lista_produtos.append(Produto("Notebook Asus", 0.527, 3999.00))
-
-espacos = []
-valores = []
-nomes = []
 
 for produto in lista_produtos:
     espacos.append(produto.espaco)
@@ -65,7 +64,6 @@ toolbox.register("mutate", tools.mutFlipBit, indpb = 0.01)
 toolbox.register("select", tools.selRoulette)
 
 if __name__ == "__main__":
-    random.seed(1)
     populacao = toolbox.population(n = 20)
     probabilidade_crossover = 1.0
     probabilidade_mutacao = 0.01
@@ -81,7 +79,21 @@ if __name__ == "__main__":
                                           probabilidade_mutacao,
                                           numero_geracoes, estatisticas)
 
-    
+    melhores = tools.selBest(populacao, 2)
+    for individuo in melhores:
+        print(individuo)
+        print(individuo.fitness)
+        soma = 0
+        for i in range(len(lista_produtos)):
+            if individuo[i] == 1:
+                soma += valores[i]
+                print("Nome: %s R$ %s " % (lista_produtos[i].nome,
+                                           lista_produtos[i].valor))
+        print("Melhor solução: %s " % soma)
+    valores_grafico = info.select("max")
+    plt.plot(valores_grafico)
+    plt.title("Evolução dos valores")
+    plt.show()
     
     
     
