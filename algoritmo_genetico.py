@@ -130,14 +130,24 @@ if __name__ == '__main__':
     ag.melhor_individuo(ag.populacao[0])
     
     soma = ag.soma_avaliacoes()
-    print("Soma das avaliações: %s" % soma)
+    nova_populacao = []
+    probabilidade_mutacao = 0.01
     
     for individuos_gerados in range(0, ag.tamanho_populacao, 2):
         pai1 = ag.seleciona_pai(soma)
         pai2 = ag.seleciona_pai(soma)
+        filhos = ag.populacao[pai1].crossover(ag.populacao[pai2])
+        nova_populacao.append(filhos[0].mutacao(probabilidade_mutacao))
+        nova_populacao.append(filhos[1].mutacao(probabilidade_mutacao))
     
+    ag.populacao = list(nova_populacao)
+    for individuo in ag.populacao:
+        individuo.avaliacao()
+    ag.ordena_populacao()
+    ag.melhor_individuo(ag.populacao[0])
+    soma = ag.soma_avaliacoes()
     
-    
+    print("Melhor: %s" % ag.melhor_solucao.cromossomo, "\nValor: %s\n" % ag.melhor_solucao.nota_avaliacao)
     
     
     
