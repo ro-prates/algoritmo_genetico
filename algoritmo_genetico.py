@@ -46,14 +46,14 @@ class Individuo():
         return filhos
     
     def mutacao(self, taxa_mutacao):
-        print("Antes %s" % self.cromossomo)
+       # print("Antes %s" % self.cromossomo)
         for i in range(len(self.cromossomo)):
             if random() < taxa_mutacao:
                 if self.cromossomo[i] == '1':
                     self.cromossomo[i] = '0'
                 else:
                     self.cromossomo[i] = '1'
-        print("Depois %s " % self.cromossomo)                    
+     #   print("Depois %s " % self.cromossomo)                    
         return self
     
 class AlgoritmoGenetico():
@@ -94,6 +94,50 @@ class AlgoritmoGenetico():
             i += 1
         return pai
     
+    def visualiza_geracao(self):
+        melhor = self.populacao[0]
+        print("G: %s -> Valor: %s Espaço: %s Cromossomo: %s" % (self.populacao[0].geracao,
+                                                                melhor.nota_avaliacao,
+                                                                melhor.espaco_usado,
+                                                                melhor.cromossomo))
+        
+    def resolver(self, taxa_mutacao, numero_geracoes, espacos, valores, limite_espacos):
+        self.inicializa_popupalacao(espacos, valores, limite_espacos)
+        
+        for individuo in self.populacao:
+            individuo.avaliacao()
+        
+        self.ordena_populacao()
+        self.visualiza_geracao()
+        
+        for geracao in range(numero_geracoes):
+            soma_avaliacao = self.soma_avaliacoes()
+            nova_populacao = []
+            
+            for individuos_gerados in range(0, self.tamanho_populacao, 2):
+                pai1 = self.seleciona_pai(soma_avaliacao)
+                pai2 = self.seleciona_pai(soma_avaliacao)
+                
+                filhos = self.populacao[pai1].crossover(self.populacao[pai2])
+                nova_populacao.append(filhos[0].mutacao(taxa_mutacao))
+                nova_populacao.append(filhos[1].mutacao(taxa_mutacao))
+            self.populacao = list(nova_populacao)
+            
+            for individuo in self.populacao:
+                individuo.avaliacao()
+                
+            self.ordena_populacao()
+            self.visualiza_geracao()
+            melhor = self.populacao[0]
+            self.melhor_individuo(melhor)
+            
+        print("Melhor solução -> G: %s Valor: %s Espaço: %s Cromossomo: %s" %
+              (self.melhor_solucao.geracao,
+               self.melhor_solucao.nota_avaliacao,
+               self.melhor_solucao.espaco_usado,
+               self.melhor_solucao.cromossomo))
+        return self.melhor_solucao.cromossomo
+    
 if __name__ == '__main__':
     lista_produtos = []
     lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
@@ -120,36 +164,16 @@ if __name__ == '__main__':
         valores.append(produto.valor)
         nomes.append(produto.nome)
     limite = 3
-    
     tamanho_populacao = 20
+    taxa_mutacao = 0.01
+    numero_geracoes = 10000
     ag = AlgoritmoGenetico(tamanho_populacao)
-    ag.inicializa_popupalacao(espacos, valores, limite)
-    for individuo in ag.populacao:
-        individuo.avaliacao()
-    ag.ordena_populacao()
-    ag.melhor_individuo(ag.populacao[0])
+    resultado = ag.resolver(taxa_mutacao, numero_geracoes, espacos, valores, limite)
     
-    soma = ag.soma_avaliacoes()
-    nova_populacao = []
-    probabilidade_mutacao = 0.01
-    
-    for individuos_gerados in range(0, ag.tamanho_populacao, 2):
-        pai1 = ag.seleciona_pai(soma)
-        pai2 = ag.seleciona_pai(soma)
-        filhos = ag.populacao[pai1].crossover(ag.populacao[pai2])
-        nova_populacao.append(filhos[0].mutacao(probabilidade_mutacao))
-        nova_populacao.append(filhos[1].mutacao(probabilidade_mutacao))
-    
-    ag.populacao = list(nova_populacao)
-    for individuo in ag.populacao:
-        individuo.avaliacao()
-    ag.ordena_populacao()
-    ag.melhor_individuo(ag.populacao[0])
-    soma = ag.soma_avaliacoes()
-    
-    print("Melhor: %s" % ag.melhor_solucao.cromossomo, "\nValor: %s\n" % ag.melhor_solucao.nota_avaliacao)
-    
-    
+    for i in range(len(lista_produtos)):
+        if resultado[i] == '1':
+            print("Nome: %s R$ %s" %(lista_produtos[i].nome,
+                                     lista_produtos[i].valor))
     
     
     
