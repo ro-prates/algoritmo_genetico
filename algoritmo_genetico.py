@@ -1,5 +1,6 @@
 from random import random
 import matplotlib.pyplot as plt
+import pymysql
 
 class Produto():
     def __init__(self, nome, espaco, valor):
@@ -47,14 +48,12 @@ class Individuo():
         return filhos
     
     def mutacao(self, taxa_mutacao):
-       # print("Antes %s" % self.cromossomo)
         for i in range(len(self.cromossomo)):
             if random() < taxa_mutacao:
                 if self.cromossomo[i] == '1':
                     self.cromossomo[i] = '0'
                 else:
-                    self.cromossomo[i] = '1'
-     #   print("Depois %s " % self.cromossomo)                    
+                    self.cromossomo[i] = '1'                
         return self
     
 class AlgoritmoGenetico():
@@ -146,7 +145,18 @@ class AlgoritmoGenetico():
     
 if __name__ == '__main__':
     lista_produtos = []
-    lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
+    conexao = pymysql.connect(host='localhost', user='root', passwd='', db='produtos')
+    cursor = conexao.cursor()
+    cursor.execute('select nome, espaco, valor, quantidade from produtos')
+    
+    for produto in cursor:
+        for i in range(produto[3]):
+            lista_produtos.append(Produto(produto[0], produto[1], produto[2],))
+    
+    cursor.close()
+    conexao.close()
+    
+    '''lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
     lista_produtos.append(Produto("Iphone 6", 0.0000899, 2911.12))
     lista_produtos.append(Produto("TV 55' ", 0.400, 4346.99))
     lista_produtos.append(Produto("TV 50' ", 0.290, 3999.90))
@@ -159,7 +169,7 @@ if __name__ == '__main__':
     lista_produtos.append(Produto("Geladeira Brastemp", 0.635, 849.00))
     lista_produtos.append(Produto("Geladeira Consul", 0.870, 1199.89))
     lista_produtos.append(Produto("Notebook Lenovo", 0.498, 1999.90))
-    lista_produtos.append(Produto("Notebook Asus", 0.527, 3999.00))
+    lista_produtos.append(Produto("Notebook Asus", 0.527, 3999.00))'''
        
     espacos = []
     valores = []
@@ -169,7 +179,7 @@ if __name__ == '__main__':
         espacos.append(produto.espaco)
         valores.append(produto.valor)
         nomes.append(produto.nome)
-    limite = 3
+    limite = 10
     tamanho_populacao = 20
     taxa_mutacao = 0.01
     numero_geracoes = 100
