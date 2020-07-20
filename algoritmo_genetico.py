@@ -83,6 +83,17 @@ class AlgoritmoGenetico():
             soma += individuo.nota_avaliacao
         return soma
     
+    def seleciona_pai(self, soma_avaliacao):
+        pai = -1
+        valor_sorteado = random() * soma_avaliacao
+        soma = 0
+        i = 0
+        while i < len(self.populacao) and soma < valor_sorteado:
+            soma += self.populacao[i].nota_avaliacao
+            pai += 1
+            i += 1
+        return pai
+    
 if __name__ == '__main__':
     lista_produtos = []
     lista_produtos.append(Produto("Geladeira Dako", 0.751, 999.90))
@@ -121,7 +132,9 @@ if __name__ == '__main__':
     soma = ag.soma_avaliacoes()
     print("Soma das avaliações: %s" % soma)
     
-    
+    for individuos_gerados in range(0, ag.tamanho_populacao, 2):
+        pai1 = ag.seleciona_pai(soma)
+        pai2 = ag.seleciona_pai(soma)
     
     
     
