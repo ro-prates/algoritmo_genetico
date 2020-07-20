@@ -40,7 +40,7 @@ for produto in lista_produtos:
 limite = 3
 
 toolbox = base.Toolbox()
-creator.create("FitnessMax", base.Fitness, weigths=(1.0, ))
+creator.create("FitnessMax", base.Fitness, weights=(1.0, ))
 creator.create("Individual", list, fitness=creator.FitnessMax)
 toolbox.register("attr_bool", random.randint, 0, 1)
 toolbox.register("individual", tools.initRepeat, creator.Individual,
@@ -48,7 +48,39 @@ toolbox.register("individual", tools.initRepeat, creator.Individual,
 
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
+def avaliacao(individual):
+    nota = 0
+    soma_espacos = 0
+    for i in range(len(individual)):
+        if individual[i] == 1:
+            nota += valores[i]
+            soma_espacos += espacos[i]
+    if soma_espacos > limite:
+        nota = 1
+    return nota / 100000, 
+
+toolbox.register("evaluate", avaliacao)
+toolbox.register("mate", tools.cxOnePoint)
+toolbox.register("mutate", tools.mutFlipBit, indpb = 0.01)
+toolbox.register("select", tools.selRoulette)
+
+if __name__ == "__main__":
+    random.seed(1)
+    populacao = toolbox.population(n = 20)
+    probabilidade_crossover = 1.0
+    probabilidade_mutacao = 0.01
+    numero_geracoes = 100
     
+    estatisticas = tools.Statistics(key=lambda individuo: individuo.fitness.values)
+    estatisticas.register("max", numpy.max)
+    estatisticas.register("min", numpy.min)
+    estatisticas.register("med", numpy.mean)
+    estatisticas.register("std", numpy.std)
+    populacao, info = algorithms.eaSimple(populacao, toolbox,
+                                          probabilidade_crossover, 
+                                          probabilidade_mutacao,
+                                          numero_geracoes, estatisticas)
+
     
     
     
